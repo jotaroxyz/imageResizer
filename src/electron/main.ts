@@ -1,17 +1,17 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import path from "path";
-import { isDev } from "./util.js";
+import { getPreloadPath, isDev } from "./util.js";
 
 function createWindow(): BrowserWindow {
   const mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 800,
-    minWidth: 800,
-    minHeight: 600,
+    width: 400,
+    height: 500,
+    resizable: false,
     frame: false,
     titleBarStyle: "hidden",
     backgroundColor: "#010710",
     webPreferences: {
+      preload: getPreloadPath(),
       contextIsolation: true,
       nodeIntegration: false,
     },
@@ -22,9 +22,6 @@ function createWindow(): BrowserWindow {
 
   // IPC handlers for window controls
   ipcMain.on("window:minimize", () => mainWindow.minimize());
-  ipcMain.on("window:maximize", () => {
-    mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize();
-  });
   ipcMain.on("window:close", () => mainWindow.close());
 
   // Load the UI
