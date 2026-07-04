@@ -1,0 +1,51 @@
+{
+  "name": "imageResizer",
+  "author": "ren <https://github.com/jotaroxyz>",
+  "description": "A simple open-source image resizing app.",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "main": "dist/electron/main.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jotaroxyz/imageResizer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jotaroxyz/imageResizer/issues"
+  },
+  "homepage": "https://github.com/jotaroxyz/imageResizer#readme",
+  "scripts": {
+    "dev": "concurrently -k -n VITE,TSC,ELECTRON -c blue,yellow,green \"bun run react:dev\" \"bun run electron:watch\" \"bun run electron:start\"",
+
+    "react:dev": "vite",
+    "react:build": "vite build",
+
+    "electron:watch": "tsc -b src/electron/tsconfig.json --watch",
+    "electron:build": "tsc -b src/electron/tsconfig.json",
+    "electron:start": "wait-on tcp:1111 dist/electron/main.js && nodemon --watch dist/electron --delay 200ms --exec \"cross-env NODE_ENV=development electron .\"",
+
+    "build": "bun run react:build && bun run electron:build",
+    "package": "bun run build && electron-builder",
+    "package:win": "bun run build && electron-builder --win",
+    "package:mac": "bun run build && electron-builder --mac",
+    "package:linux": "bun run build && electron-builder --linux"
+  },
+  "dependencies": {
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.0",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.3",
+    "concurrently": "^10.0.3",
+    "cross-env": "^10.1.0",
+    "electron": "^43.0.0",
+    "electron-builder": "^26.15.3",
+    "nodemon": "^3.1.14",
+    "typescript": "^6.0.3",
+    "vite": "^8.1.3",
+    "wait-on": "^9.0.10"
+  }
+}

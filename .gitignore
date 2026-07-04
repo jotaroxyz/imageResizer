@@ -1,0 +1,6 @@
+# dependencies
+node_modules
+electron-builder.json
+
+# output
+dist
