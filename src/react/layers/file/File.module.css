@@ -1,0 +1,6 @@
+.paper {
+  padding: rem(12) rem(24);
+  width: rem(200);
+
+  background-color: var(--paper-bg);
+}

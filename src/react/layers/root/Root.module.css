@@ -1,0 +1,41 @@
+.root {
+  height: 100%;
+  width: 100%;
+
+  display: flex; 
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 0;
+}
+
+.header {
+  width: 100%;
+}
+
+.action_icon {
+  &:hover {
+    background-color: var(--mantine-color-dark-9);
+  }
+
+  &[data-type=close]:hover {
+    background-color: var(--mantine-color-red-7);
+  }
+}
+
+.title_bar_controls {
+  position: fixed;
+  right: 0;
+  -webkit-app-region: no-drag;
+}
+
+.main {
+  height: calc(100vh - 100%);
+  min-height: calc(100vh - 32px);
+
+  width: 100%;
+
+  background-color: var(--mantine-color-navy-7);
+  border: 1px solid var(--mantine-color-dark-9);
+  padding: 0;
+}
