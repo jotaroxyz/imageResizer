@@ -6,7 +6,7 @@
     "module": "nodenext",
     "moduleResolution": "nodenext",
 
-    "outDir": "../../dist/electron",
+    "outDir": "../../dist/types",
 
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -15,12 +15,6 @@
     "composite": true,
     "declaration": true,
     "declarationMap": true,
-
-    "paths": {
-      "types": ["../types/index.js"]
-    }
   },
-  "references": [
-    { "path": "../types/tsconfig.json" }
-  ],
+  "include": ["**/*.ts", "**/*.d.ts"]
 }
