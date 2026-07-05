@@ -1,1 +1,0 @@
-export type WindowName = "main" | "settings";
