@@ -1,4 +1,4 @@
-import { app, BrowserWindow, BrowserWindowConstructorOptions, dialog, ipcMain } from "electron";
+import { app, BrowserWindow, BrowserWindowConstructorOptions, dialog, ipcMain, shell } from "electron";
 import path from "path";
 import fs from 'fs/promises';
 import sharp from "sharp";
@@ -125,8 +125,7 @@ const openFileWindow = async (): Promise<void> => {
   );
 };
 
-// App handlers
-ipcMain.handle("app:reload", async () => {
+const reload = async () => {
   // Close windows
   if (windows.file && !windows.file.isDestroyed()) windows.file.close();
   if (windows.main && !windows.main.isDestroyed()) windows.main.close();
@@ -136,7 +135,10 @@ ipcMain.handle("app:reload", async () => {
 
   // Open main window
   await openMainWindow();
-});
+}
+
+// App handlers
+ipcMain.handle("app:reload", reload);
 
 ipcMain.handle("app:send-image", async (_, payload: ImageInterface) => {
   Console.dev("[app:send-image] got call");
@@ -181,7 +183,12 @@ ipcMain.handle("app:resize-image", async (_, { height, width }: ResizePayload) =
       .resize(Math.round(width), Math.round(height), { fit: "fill" })
       .toFile(filePath);
     
-    //@todo open the resized img path?
+    //@todo check if working on other machines
+    shell.showItemInFolder(filePath);
+
+    // Reload app
+    await reload();
+
     return;
   } catch (error) {
     //@todo add a client-side notify?
