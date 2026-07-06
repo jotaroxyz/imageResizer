@@ -14,13 +14,6 @@
 
     "composite": true,
     "declaration": true,
-    "declarationMap": true,
-
-    "paths": {
-      "types": ["../types/index.js"]
-    }
-  },
-  "references": [
-    { "path": "../types/tsconfig.json" }
-  ],
+    "declarationMap": true
+  }
 }
