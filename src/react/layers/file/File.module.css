@@ -1,6 +1,6 @@
 .paper {
-  padding: rem(12) rem(24);
-  width: rem(200);
-
+  /* flex: 1; */
+  min-width: 0;
   background-color: var(--paper-bg);
+  user-select: none;
 }

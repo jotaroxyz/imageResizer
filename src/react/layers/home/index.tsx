@@ -3,16 +3,33 @@ import React from 'react';
 import classes from "./App.module.css";
 import { IconPhoto } from '@tabler/icons-react';
 import { useFileState } from '../../state';
-import { useNavigate } from 'react-router-dom';
 
 const HomeLayer: React.FC = () => {
-  const [file, setFile] = useFileState();
-  const navigate = useNavigate();
+  const [file, setFile] = useFileState(); 
 
   React.useEffect(() => {
     if (!file) return;
 
-    navigate("/file");
+    let cancelled = false;
+
+    const sendImage = async () => {
+      const arrayBuffer = await file.arrayBuffer();
+
+      if (cancelled) return;
+
+      await window.ipcRenderer.invoke("app:send-image", {
+        name: file.name,
+        type: file.type,
+        buffer: arrayBuffer,
+        path: window.utils.getFilePath(file)
+      });
+    };
+
+    sendImage();
+
+    return () => {
+      cancelled = true;
+    };
   }, [file]);
 
   return (
