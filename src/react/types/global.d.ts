@@ -1,5 +1,3 @@
-import type { ElectronAPI } from "../../electron/preload.cjs";
-
 declare global {
   interface Window {
     ipcRenderer: {
@@ -7,10 +5,15 @@ declare global {
       on: (channel: string, func: (...args: any[]) => void) => void;
       once: (channel: string, func: (...args: any[]) => void) => void;
       removeAllListeners: (channel: string) => void;
+      invoke: (channel: string, ...args: any[]) => Promise<any>;
     };
     appWindow: {
-      minimize: () => void,
-      close: () => void
+      ready: (id: string) => void;
+      minimize: (id: string | null) => void;
+      close: (id: string | null) => void;
+    };
+    utils: {
+      getFilePath: (file: File) => string;
     }
   }
 }
