@@ -3,7 +3,7 @@
   "author": "ren <https://github.com/jotaroxyz>",
   "description": "A simple open-source image resizing app.",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.1.1",
   "type": "module",
   "main": "dist/electron/main.js",
   "repository": {
