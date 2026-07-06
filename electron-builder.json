@@ -1,0 +1,32 @@
+{
+  "appId": "com.jotaroxyz.imageResizer",
+  "productName": "ImageResizer",
+  "files": [
+    "package.json",
+    {
+      "from": "dist/electron",
+      "to": "dist/electron"
+    },
+    {
+      "from": "dist/react",
+      "to": "dist/react"
+    }
+  ],
+  "icon": "./icon.png",
+  "extraResources": [ "dist/electron/preload.cjs" ],
+  "publish": {
+    "provider": "github",
+    "owner": "jotaroxyz",
+    "repo": "imageResizer"
+  },
+  "mac": {
+    "target": "dmg"
+  },
+  "linux": {
+    "target": "AppImage",
+    "category": "Utility"
+  },
+  "win": {
+    "target": ["portable", "msi"]
+  }
+}
