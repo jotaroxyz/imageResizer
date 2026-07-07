@@ -40,9 +40,9 @@ export default {
     artifactName: "${productName}-${os}-${arch}.${ext}"
   },
   msi: {
-    artifactName: "${productName}-${os}-${arch}_installer.${ext}"
+    artifactName: "${productName}-${os}-${arch}-installer.${ext}"
   },
   portable: {
-    artifactName: "${productName}-${os}-${arch}_portable.${ext}"
+    artifactName: "${productName}-${os}-${arch}-portable.${ext}"
   }
 };
