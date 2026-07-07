@@ -23,10 +23,10 @@
     "electron:build": "tsc -b src/electron/tsconfig.json",
     "electron:start": "wait-on tcp:1111 dist/electron/main.js && nodemon --watch dist/electron --delay 200ms --exec \"cross-env NODE_ENV=development electron .\"",
     "build": "bun run react:build && bun run electron:build",
-    "package": "bun run build && electron-builder",
-    "package:win": "bun run build && electron-builder --win",
-    "package:mac": "bun run build && electron-builder --mac",
-    "package:linux": "bun run build && electron-builder --linux"
+    "package": "bun run build && electron-builder --config package.js",
+    "package:win": "bun run build && electron-builder --win --config package.js",
+    "package:mac": "bun run build && electron-builder --mac --config package.js",
+    "package:linux": "bun run build && electron-builder --linux --config package.js"
   },
   "dependencies": {
     "@mantine/core": "^9.4.1",
