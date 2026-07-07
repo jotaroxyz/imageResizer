@@ -1,23 +1,27 @@
 import { app, BrowserWindow, BrowserWindowConstructorOptions, dialog, ipcMain, shell } from "electron";
 import path from "path";
-import fs from 'fs/promises';
+import fs from "fs/promises";
 import sharp from "sharp";
-import { __rootdir,  getPreloadPath, isDev } from "./util.js";
-import Console from "./logger.js";
+import { __dirname, baseDir, isDev } from "./util.js";
 import { ImageInterface } from "./types.js";
 
 let image: ImageInterface | null = null;
 
 const windows = {
   main: null as BrowserWindow | null,
-  file: null as BrowserWindow | null,
+  image: null as BrowserWindow | null,
 };
 
 const windowIpcReady = new Map<string, boolean>();
 
+interface FilePath {
+  path: string;
+  hash: string;
+}
+
 const createBrowserWindow = async (
   options: BrowserWindowConstructorOptions,
-  paths: { url: string; file: string; },
+  paths: { url: string; file: FilePath; },
   onReady?: (window: BrowserWindow) => void,
   onClose?: (window: BrowserWindow) => void
 ): Promise<BrowserWindow> => {
@@ -27,9 +31,9 @@ const createBrowserWindow = async (
     frame: false,
     titleBarStyle: "hidden",
     backgroundColor: "#010710",
-    show: false, // Don't show until ready
+    show: false, // Don"t show until ready
     webPreferences: {
-      preload: getPreloadPath(),
+      preload: path.join(__dirname, "preload.cjs"),
       contextIsolation: true,
       nodeIntegration: false
     }
@@ -43,10 +47,14 @@ const createBrowserWindow = async (
 
   if (isDev()) {
     const url = `${paths.url}?id=${id}`;
-    window.loadURL(url);
+    await window.loadURL(url);
+
+    window.webContents.openDevTools({ mode: "detach" });
   } else {
-    const file = `${paths.file}?id=${id}`;
-    window.loadFile(file);
+    const fileUrl = new URL(`file://${paths.file.path.replace(/\\/g, "/")}`);
+    fileUrl.hash = `${paths.file.hash}?id=${id}`;
+
+    await window.loadURL(fileUrl.toString());
   }
 
   // IPC handlers
@@ -82,52 +90,54 @@ const openMainWindow = async (): Promise<void> => {
       height: 450,
     },
     {
-      url: "http://localhost:1111/home",
-      file: path.join(__rootdir, "dist/react/index.html/home") //? idk if this will work in prod
+      url: "http://localhost:1111/#/home",
+      file: {
+        path: path.join(baseDir, "dist/react/index.html"),
+        hash: "home"
+      }
     },
-    (window) => {
-      Console.dev("Main window opened!");
-      window.webContents.openDevTools({ mode: "detach" });
-    },
+    (_window) => console.log("Main window opened!"),
     () => {
       windows.main = null;
-      Console.dev("Main window closed!");
+      console.log("Main window closed!");
     }
   );
 };
 
 const openFileWindow = async (): Promise<void> => {
-  if (windows.file && !windows.file.isDestroyed()) {
-    windows.file.show();
-    windows.file.focus();
+  if (windows.image && !windows.image.isDestroyed()) {
+    windows.image.show();
+    windows.image.focus();
     return;
   }
 
-  windows.file = await createBrowserWindow(
+  windows.image = await createBrowserWindow(
     {
       width: 700,
       height: 500,
     },
     {
-      url: "http://localhost:1111/file",
-      file: path.join(__rootdir, "dist/react/index.html/file") //? idk if this will work in prod
+      url: "http://localhost:1111/#/image",
+      file: {
+        path: path.join(baseDir, "dist/react/index.html"),
+        hash: "image"
+      }
     },
     async (window) => {
-      Console.dev("File window opened!");
-      window.webContents.openDevTools({ mode: "detach" });
+      console.log("Image window opened!");
 
       if (image) window.webContents.send("react:send-image", image);
     },
     () => {
-      windows.file = null;
-      Console.dev("File window closed!");
+      windows.image = null;
+      console.log("Image window closed!");
     }
   );
 };
 
 const reload = async () => {
   // Close windows
-  if (windows.file && !windows.file.isDestroyed()) windows.file.close();
+  if (windows.image && !windows.image.isDestroyed()) windows.image.close();
   if (windows.main && !windows.main.isDestroyed()) windows.main.close();
 
   // Cleanup variables
@@ -141,7 +151,7 @@ const reload = async () => {
 ipcMain.handle("app:reload", reload);
 
 ipcMain.handle("app:send-image", async (_, payload: ImageInterface) => {
-  Console.dev("[app:send-image] got call");
+  console.log("[app:send-image] got call");
 
   //@todo server-side type check?
 
@@ -158,13 +168,13 @@ interface ResizePayload {
 }
 
 ipcMain.handle("app:resize-image", async (_, { height, width }: ResizePayload) => {
-  if (!image || !windows.file) return;
+  if (!image || !windows.image) return;
 
   const ext = path.extname(image.path);
   const baseName = path.basename(image.path, ext);
   const defaultFileName = `${baseName}@${Math.round(width)}x${Math.round(height)}${ext}`;
 
-  const { canceled, filePath } = await dialog.showSaveDialog(windows.file!, {
+  const { canceled, filePath } = await dialog.showSaveDialog(windows.image!, {
     title: "Save resized image",
     defaultPath: defaultFileName,
     filters: [
@@ -197,7 +207,7 @@ ipcMain.handle("app:resize-image", async (_, { height, width }: ResizePayload) =
 });
 
 app.whenReady().then(async () => {
-  Console.dev("App ready!");
+  console.log("App ready!");
 
   await openMainWindow();
 });
