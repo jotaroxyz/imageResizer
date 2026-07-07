@@ -32,4 +32,4 @@ jobs:
       - name: Build and Publish Electron App
         run: bun run package
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.MY_PERSONAL_TOKEN }}
