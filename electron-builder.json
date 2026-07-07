@@ -24,13 +24,25 @@
     "publishAutoUpdate": false
   },
   "mac": {
-    "target": "dmg"
+    "target": "dmg",
+    "artifactName": "${productName}-${arch}.${ext}"
   },
   "linux": {
     "target": "AppImage",
-    "category": "Utility"
+    "category": "Utility",
+    "artifactName": "${productName}.${ext}"
   },
   "win": {
-    "target": ["portable", "msi"]
+    "target": [
+      {
+        "target": "portable",
+        "arch": ["x64"]
+      },
+      {
+        "target": "msi",
+        "arch": ["x64"]
+      }
+    ],
+    "artifactName": "${productName}-${target}.${ext}"
   }
 }
