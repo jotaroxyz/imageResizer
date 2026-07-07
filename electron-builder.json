@@ -1,6 +1,9 @@
 {
   "appId": "com.jotaroxyz.imageResizer",
   "productName": "ImageResizer",
+  "directories": {
+    "output": "package"
+  },
   "files": [
     "package.json",
     {
@@ -17,7 +20,8 @@
   "publish": {
     "provider": "github",
     "owner": "jotaroxyz",
-    "repo": "imageResizer"
+    "repo": "imageResizer",
+    "publishAutoUpdate": false
   },
   "mac": {
     "target": "dmg"
