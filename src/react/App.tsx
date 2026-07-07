@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Routes, Navigate, useSearchParams } from "react-router-dom";
 import RootLayer from './layers/root';
 import AppLayer from './layers/home';
-import FileLayer from './layers/file';
+import ImageLayer from './layers/image';
 import { useSetId } from './state';
 
 const App: React.FC = () => {
@@ -35,7 +35,7 @@ const App: React.FC = () => {
         <Route index element={<Navigate to={"/home"} replace />} />
 
         <Route path="/home" element={<AppLayer />} />
-        <Route path="/file" element={<FileLayer />} />
+        <Route path="/image" element={<ImageLayer />} />
       </Route>
 
       {/* Catch-all: redirect any unknown route to /home */}

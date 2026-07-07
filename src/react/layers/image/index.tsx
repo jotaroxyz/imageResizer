@@ -1,8 +1,8 @@
 import { Flex, Paper, Image as MantineImage, rem, Text } from '@mantine/core';
-import React from 'react';
-import classes from "./File.module.css";
 import { useFileState } from '../../state';
 import { useIpc } from '../../hooks/useIpc';
+import React from 'react';
+import classes from "./Image.module.css";
 import ResizeInputs from './ResizeInputs';
 
 const gcd = (a: number, b: number): number => b === 0 ? a : gcd(b, a % b);
@@ -32,7 +32,7 @@ const getContainedSize = (width: number, height: number, maxSize: number) => {
   };
 };
 
-const FileLayer: React.FC = () => {
+const ImageLayer: React.FC = () => {
   const [file, setFile] = useFileState();
   const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
   const [resolution, setResolution] = React.useState<{ width: number; height: number } | null>(null);
@@ -48,6 +48,8 @@ const FileLayer: React.FC = () => {
     buffer: Uint8Array;
     path: string
   }>("react:send-image", (data) => {
+    console.log("got image");
+
     const bytes = new Uint8Array(data.buffer); // copies into a fresh ArrayBuffer-backed Uint8Array
     const file = new File([bytes], data.name, { type: data.type });
     setFile(file);
@@ -152,4 +154,4 @@ const FileLayer: React.FC = () => {
     return <h3>Loading data...</h3>
 };
 
-export default FileLayer;
+export default ImageLayer;

@@ -5,7 +5,7 @@ import "@mantine/core/styles.css";
 import "./index.css";
 import App from "./App";
 import { theme } from "./theme";
-import { BrowserRouter } from "react-router-dom";
+import { HashRouter } from "react-router-dom";
 
 const container = document.getElementById("root");
 if (!container) throw new Error("Root element not found");
@@ -22,10 +22,10 @@ const cssVariablesResolver: CSSVariablesResolver = (theme) => ({
 
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
+    <HashRouter>
       <MantineProvider theme={theme} defaultColorScheme="dark" cssVariablesResolver={cssVariablesResolver}>
         <App />
       </MantineProvider>
-    </BrowserRouter>
+    </HashRouter>
   </React.StrictMode>
 );
